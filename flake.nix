@@ -12,7 +12,7 @@
             (
               { pkgs, lib, ... }:
               {
-                isoImage.squashfsCompression = "zstd -Xcompression-level 15";
+                isoImage.squashfsCompression = "zstd -Xcompression-level 22";
                 boot.plymouth.enable = lib.mkForce false;
                 boot.kernelPackages = pkgs.linuxPackages_latest;
                 boot.supportedFilesystems = lib.mkForce [
@@ -87,8 +87,6 @@
                   evolution-data-server.enable = lib.mkForce false;
                 };
                 services.avahi.enable = false;
-                services.gnome.core-developer-tools.enable = false;
-                services.gnome.core-utilities.enable = false;
                 i18n = {
                   defaultLocale = "zh_CN.UTF-8";
                   supportedLocales = [
