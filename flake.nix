@@ -12,7 +12,8 @@
             (
               { pkgs, lib, ... }:
               {
-                isoImage.squashfsCompression = "zstd -Xcompression-level 19";
+                isoImage.squashfsCompression = "zstd -Xcompression-level 22";
+                boot.plymouth.enable = lib.mkForce false;
                 boot.kernelPackages = pkgs.linuxPackages_latest;
                 boot.supportedFilesystems = lib.mkForce [
                   "bcachefs"
@@ -26,6 +27,7 @@
                 ];
                 environment.gnome.excludePackages =
                   (with pkgs; [
+                    loupe
                     orca
                     tecla
                     gnome-tecla
@@ -46,9 +48,14 @@
                     cheese
                     gnome-music
                     gnome-terminal
+                    gnome-font-viewer
+                    gnome-tweaks
+                    dconf-editor
                     epiphany
                     geary
                     gnome-calendar
+                    gnome-calculator
+                    gnome-color-manager
                     gnome-clocks
                     gnome-characters
                     gnome-maps
@@ -79,6 +86,9 @@
                   gnome-remote-desktop.enable = false;
                   evolution-data-server.enable = lib.mkForce false;
                 };
+                services.avahi.enable = false;
+                services.gnome.core-developer-tools.enable = false;
+                services.gnome.core-utilities.enable = false;
                 i18n = {
                   defaultLocale = "zh_CN.UTF-8";
                   supportedLocales = [
@@ -88,15 +98,17 @@
                   inputMethod = {
                     enabled = "fcitx5";
                     fcitx5 = {
-                      addons = with pkgs; [
-                        fcitx5-gtk
-                        fcitx5-with-addons
-                        fcitx5-chinese-addons
-                      ];
-                      waylandFrontend = true;
+                      addons = with pkgs; [ fcitx5-chinese-addons ];
                     };
                   };
                 };
+                sound.enable = lib.mkForce false;
+                networking.firewall.enable = false;
+                services.xserver.videoDrivers = [ "modesetting" ];
+                hardware.enableAllFirmware = false;
+                hardware.enableRedistributableFirmware = lib.mkForce false;
+                environment.noXlibs = true;
+                documentation.enable = false;
                 environment.systemPackages = with pkgs; [
                   bcachefs-tools
                   btrfs-progs
