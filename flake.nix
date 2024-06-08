@@ -12,7 +12,7 @@
             (
               { pkgs, lib, ... }:
               {
-                isoImage.squashfsCompression = "zstd -Xcompression-level 15";
+                isoImage.squashfsCompression = "zstd -Xcompression-level 19";
                 boot.kernelPackages = pkgs.linuxPackages_latest;
                 boot.supportedFilesystems = lib.mkForce [
                   "bcachefs"

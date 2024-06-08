@@ -24,10 +24,10 @@ jobs:
           git init
           git add flake.nix
           nix build .#nixosConfigurations.iso.config.system.build.isoImage --show-trace
-          ls result/iso/
+          ls -l result/iso/
           mkdir mnt
           sudo mount -o loop result/iso/nixos-*.iso mnt
-          ls mnt
+          ls -l mnt
           sudo umount mnt
       - uses: ncipollo/release-action@v1
         with:
