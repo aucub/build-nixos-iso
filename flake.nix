@@ -29,7 +29,6 @@
                   (with pkgs; [
                     loupe
                     orca
-                    tecla
                     gnome-tecla
                     gnome-tour
                     gnome-photos
@@ -39,7 +38,7 @@
                     gnome-connections
                     libsForQt5.qt5ct
                     qt6Packages.qt6ct
-                    gnome-console
+                    gnome-text-editor
                   ])
                   ++ (with pkgs.gnome; [
                     gnome-contacts
@@ -70,9 +69,35 @@
                     file-roller
                     seahorse
                   ]);
+                environment.variables = {
+                  EDITOR = "hx";
+                  QT_IM_MODULE = "fcitx";
+                  XMODIFIERS = "@im=fcitx";
+                  SDL_IM_MODULE = "fcitx";
+                  GLFW_IM_MODULE = "ibus";
+                };
+                environment.shells = with pkgs; [
+                  bashInteractive
+                  fish
+                ];
+                environment.systemPackages = with pkgs; [
+                  gnome-console
+                  bcachefs-tools
+                  btrfs-progs
+                  helix
+                  zed-editor
+                ];
                 programs.seahorse.enable = false;
                 programs.gnome-terminal.enable = false;
                 programs.file-roller.enable = false;
+                programs.command-not-found.enable = false;
+                programs.fish = {
+                  enable = true;
+                  interactiveShellInit = ''
+                    set -U fish_greeting
+                  '';
+                };
+                programs.neovim.enable = false;
                 services.gnome = {
                   gnome-user-share.enable = false;
                   gnome-online-accounts.enable = false;
@@ -87,6 +112,33 @@
                   evolution-data-server.enable = lib.mkForce false;
                 };
                 services.avahi.enable = false;
+                services.xserver.excludePackages = with pkgs; [ xterm ];
+                services.kmscon = {
+                  enable = true;
+                  fonts = [
+                    {
+                      name = "Noto Sans CJK SC";
+                      package = pkgs.noto-fonts-cjk-sans;
+                    }
+                  ];
+                  extraOptions = "--term xterm-256color";
+                  extraConfig = "font-size=14";
+                  hwRender = true;
+                };
+                fonts = {
+                  enableDefaultPackages = false;
+                  packages = with pkgs; [
+                    noto-fonts
+                    noto-fonts-cjk-sans
+                  ];
+                  fontconfig = {
+                    enable = true;
+                    defaultFonts = {
+                      sansSerif = [ "Noto Sans CJK SC" ];
+                      monospace = [ "Noto Sans CJK SC" ];
+                    };
+                  };
+                };
                 i18n = {
                   defaultLocale = "zh_CN.UTF-8";
                   supportedLocales = [
@@ -104,11 +156,10 @@
                 networking.firewall.enable = false;
                 hardware.enableAllFirmware = false;
                 documentation.enable = false;
-                environment.systemPackages = with pkgs; [
-                  bcachefs-tools
-                  btrfs-progs
-                  zstd
-                ];
+                xdg.mime.addedAssociations = {
+                  "text/plain" = "dev.zed.Zed.desktop";
+                  "inode/directory" = "dev.zed.Zed.desktop";
+                };
               }
             )
           ];

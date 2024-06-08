@@ -10,6 +10,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: cachix/install-nix-action@V27
         with:
           nix_path: nixpkgs=channel:nixos-unstable
@@ -21,16 +23,15 @@ jobs:
           diagnostic-endpoint: ""
           use-flakehub: false
       - run: |
-          git init
-          git add flake.nix
           nix build .#nixosConfigurations.iso.config.system.build.isoImage --show-trace
-          ls -l result/iso/
+          ls -lhA result/iso/
           mkdir mnt
           sudo mount -o loop result/iso/nixos-*.iso mnt
-          ls -l mnt
+          ls -lhA mnt
           sudo umount mnt
           cd result/iso/
           sudo split -b 2000M nixos-*.iso nixos_part_
+          ls -lhA
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "result/iso/nixos_part_*"
