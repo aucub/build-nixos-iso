@@ -18,6 +18,8 @@ jobs:
           extra_nix_config: |
             auto-optimise-store = true
             experimental-features = nix-command flakes
+            trusted-public-keys = cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=
+            substituters = https://cosmic.cachix.org/ https://cache.nixos.org/
       - uses: DeterminateSystems/magic-nix-cache-action@v7
         with:
           diagnostic-endpoint: ""
@@ -29,12 +31,9 @@ jobs:
           sudo mount -o loop result/iso/nixos-*.iso mnt
           ls -lhA mnt
           sudo umount mnt
-          cd result/iso/
-          sudo split -b 2000M nixos-*.iso nixos_part_
-          ls -lhA
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "result/iso/nixos_part_*"
+          artifacts: "result/iso/nixos-*.iso"
           allowUpdates: true
           replacesArtifacts: true
-          tag: iso
+          tag: cosmic
