@@ -102,10 +102,7 @@
                 };
                 sound.enable = lib.mkForce false;
                 networking.firewall.enable = false;
-                services.xserver.videoDrivers = [ "modesetting" ];
                 hardware.enableAllFirmware = false;
-                hardware.enableRedistributableFirmware = lib.mkForce false;
-                environment.noXlibs = true;
                 documentation.enable = false;
                 environment.systemPackages = with pkgs; [
                   bcachefs-tools

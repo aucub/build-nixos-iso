@@ -30,7 +30,7 @@ jobs:
           ls -l mnt
           sudo umount mnt
           cd result/iso/
-          split -b 2000M nixos-*.iso nixos_part_
+          sudo split -b 2000M nixos-*.iso nixos_part_
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "result/iso/nixos_part_*"
