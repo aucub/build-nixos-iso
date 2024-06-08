@@ -12,7 +12,7 @@
             (
               { pkgs, lib, ... }:
               {
-                isoImage.squashfsCompression = "zstd -Xcompression-level 22";
+                isoImage.squashfsCompression = "zstd -Xcompression-level 19";
                 boot.plymouth.enable = lib.mkForce false;
                 boot.kernelPackages = pkgs.linuxPackages_latest;
                 boot.supportedFilesystems = lib.mkForce [
