@@ -30,6 +30,7 @@
                 environment = {
                   gnome.excludePackages =
                     (with pkgs; [
+                      snapshot
                       loupe
                       orca
                       gnome-tecla
