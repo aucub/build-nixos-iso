@@ -29,12 +29,9 @@ jobs:
           sudo mount -o loop result/iso/nixos-*.iso mnt
           ls -lhA mnt
           sudo umount mnt
-          cd result/iso/
-          sudo split -b 2000M nixos-*.iso nixos_part_
-          ls -lhA
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "result/iso/nixos_part_*"
+          artifacts: "result/iso/*.iso"
           allowUpdates: true
           replacesArtifacts: true
-          tag: gnome
+          tag: xfce

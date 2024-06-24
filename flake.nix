@@ -1,5 +1,5 @@
 {
-  description = "NixOS installation media";
+  description = "NixOS media";
   inputs.nixos.url = "nixpkgs/nixos-unstable";
   outputs =
     { self, nixos }:
@@ -8,11 +8,14 @@
         iso = nixos.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            "${nixos}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix"
+            "${nixos}/nixos/modules/installer/cd-dvd/installation-cd-graphical-base.nix"
             (
               { pkgs, lib, ... }:
               {
-                isoImage.squashfsCompression = "zstd -Xcompression-level 22";
+                isoImage = {
+                  edition = "xfce";
+                  squashfsCompression = "zstd -Xcompression-level 22";
+                };
                 boot = {
                   plymouth.enable = lib.mkForce false;
                   kernelPackages = pkgs.linuxPackages_latest;
@@ -28,51 +31,11 @@
                   ];
                 };
                 environment = {
-                  gnome.excludePackages =
-                    (with pkgs; [
-                      snapshot
-                      loupe
-                      orca
-                      gnome-tecla
-                      gnome-tour
-                      gnome-photos
-                      gnome-menus
-                      baobab
-                      epiphany
-                      gnome-connections
-                      libsForQt5.qt5ct
-                      qt6Packages.qt6ct
-                      gnome-text-editor
-                    ])
-                    ++ (with pkgs.gnome; [
-                      gnome-contacts
-                      gnome-initial-setup
-                      yelp
-                      cheese
-                      gnome-music
-                      gnome-terminal
-                      gnome-font-viewer
-                      gnome-tweaks
-                      dconf-editor
-                      epiphany
-                      geary
-                      gnome-calendar
-                      gnome-calculator
-                      gnome-color-manager
-                      gnome-clocks
-                      gnome-characters
-                      gnome-maps
-                      gnome-weather
-                      gnome-software
-                      simple-scan
-                      totem
-                      tali
-                      iagno
-                      hitori
-                      atomix
-                      file-roller
-                      seahorse
-                    ]);
+                  xfce.excludePackages = with pkgs.xfce; [
+                    parole
+                    xfce4-taskmanager
+                    xfce4-terminal
+                  ];
                   variables = {
                     EDITOR = "hx";
                     QT_IM_MODULE = "fcitx";
@@ -84,20 +47,23 @@
                     bashInteractive
                     fish
                   ];
-                  systemPackages = with pkgs; [
-                    gnome-console
-                    bcachefs-tools
-                    btrfs-progs
-                    helix
-                    zed-editor
-                  ];
+                  systemPackages =
+                    with pkgs;
+                    [
+                      gnome-console
+                      bcachefs-tools
+                      btrfs-progs
+                      helix
+                      zed-editor
+                    ]
+                    ++ (with pkgs.gnome; [
+                      gnome-system-monitor
+                      nautilus
+                    ]);
                 };
                 programs = {
-                  xwayland.enable = false;
+                  thunar.enable = lib.mkForce false;
                   command-not-found.enable = false;
-                  seahorse.enable = false;
-                  gnome-terminal.enable = false;
-                  file-roller.enable = false;
                   fish = {
                     enable = true;
                     interactiveShellInit = ''
@@ -107,21 +73,18 @@
                   neovim.enable = false;
                 };
                 services = {
-                  gnome = {
-                    gnome-user-share.enable = false;
-                    gnome-online-accounts.enable = false;
-                    gnome-browser-connector.enable = false;
-                    gnome-initial-setup.enable = false;
-                    gnome-online-miners.enable = lib.mkForce false;
-                    games.enable = false;
-                    tracker.enable = false;
-                    tracker-miners.enable = false;
-                    rygel.enable = false;
-                    gnome-remote-desktop.enable = false;
-                    evolution-data-server.enable = lib.mkForce false;
-                  };
                   avahi.enable = false;
-                  xserver.excludePackages = with pkgs; [ xterm ];
+                  xserver = {
+                    desktopManager.xfce.enable = true;
+                    displayManager = {
+                      autoLogin = {
+                        enable = true;
+                        user = "nixos";
+                      };
+                      gdm.enable = true;
+                    };
+                    excludePackages = with pkgs; [ xterm ];
+                  };
                   kmscon = {
                     enable = true;
                     fonts = [
