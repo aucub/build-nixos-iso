@@ -1,5 +1,5 @@
 {
-  description = "NixOS installation media";
+  description = "NixOS media";
   inputs.nixos.url = "nixpkgs/nixos-unstable";
   outputs =
     { self, nixos }:
@@ -89,7 +89,6 @@
                     bcachefs-tools
                     btrfs-progs
                     helix
-                    zed-editor
                   ];
                 };
                 programs = {
@@ -108,6 +107,7 @@
                 };
                 services = {
                   gnome = {
+                    at-spi2-core.enable = lib.mkForce false;
                     gnome-user-share.enable = false;
                     gnome-online-accounts.enable = false;
                     gnome-browser-connector.enable = false;
@@ -131,7 +131,7 @@
                       }
                     ];
                     extraOptions = "--term xterm-256color";
-                    extraConfig = "font-size=14";
+                    extraConfig = "font-size=20";
                     hwRender = true;
                   };
                 };
@@ -169,10 +169,6 @@
                   pulseaudio.enable = lib.mkForce false;
                 };
                 documentation.enable = false;
-                xdg.mime.addedAssociations = {
-                  "text/plain" = "dev.zed.Zed.desktop";
-                  "inode/directory" = "dev.zed.Zed.desktop";
-                };
               }
             )
           ];

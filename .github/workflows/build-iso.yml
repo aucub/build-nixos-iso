@@ -23,7 +23,7 @@ jobs:
           diagnostic-endpoint: ""
           use-flakehub: false
       - run: |
-          nix build .#nixosConfigurations.iso.config.system.build.isoImage --show-trace
+          nix build .#nixosConfigurations.iso.config.system.build.isoImage --show-trace -L -v
           ls -lhA result/iso/
           mkdir mnt
           sudo mount -o loop result/iso/nixos-*.iso mnt
